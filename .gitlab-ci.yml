@@ -1,0 +1,41 @@
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+
+
+
+# This template uses jdk8 for verifying and deploying images
+# image: maven:3.8.5-openjdk-18
+image: markhobson/maven-chrome:jdk-18
+
+
+
+
+stages:
+  - install
+
+
+
+# Cache downloaded dependencies and plugins between builds.
+# To keep cache across branches add 'key: "$CI_JOB_NAME"'
+cache:
+  paths:
+    - .m2/repository
+
+
+
+
+install:
+  stage: install
+  # before_script:
+  #   - /bin/sh -c apt-get update && apt-get install -y --no-install-recommends wget
+  #   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  #   - /bin/sh -c apt-get install ./google-chrome-stable_current_amd64.deb
+  script:
+    - 'echo "Started installation"'
+    - 'mvn clean install'
+  artifacts:
+    paths:
+      - target/*
